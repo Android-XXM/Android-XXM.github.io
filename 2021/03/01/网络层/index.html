@@ -1,0 +1,253 @@
+<!DOCTYPE html><html lang="zh-Hans"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"><meta name="description" content="网络层IP、ARP,RIP,OSPF"><meta name="keywords" content="网络层"><meta name="author" content="zhangws"><meta name="copyright" content="zhangws"><title>网络层IP、ARP,RIP,OSPF | 新小梦</title><link rel="shortcut icon" href="/melody-favicon.ico"><link rel="stylesheet" href="/css/index.css?version=1.9.0"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.9.0"><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css?version=1.9.0"><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://v1.hitokoto.cn/?encode=js&amp;charset=utf-8&amp;select=.footer_custom_text" defer></script><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  hexoVersion: '5.3.0'
+} </script><meta name="generator" content="Hexo 5.3.0">
+<style>.github-emoji { position: relative; display: inline-block; width: 1.2em; min-height: 1.2em; overflow: hidden; vertical-align: top; color: transparent; }  .github-emoji > span { position: relative; z-index: 10; }  .github-emoji img, .github-emoji .fancybox { margin: 0 !important; padding: 0 !important; border: none !important; outline: none !important; text-decoration: none !important; user-select: none !important; cursor: auto !important; }  .github-emoji img { height: 1.2em !important; width: 1.2em !important; position: absolute !important; left: 50% !important; top: 50% !important; transform: translate(-50%, -50%) !important; user-select: none !important; cursor: auto !important; } .github-emoji-fallback { color: inherit; } .github-emoji-fallback img { opacity: 0 !important; }</style>
+<link rel="alternate" href="/atom.xml" title="新小梦" type="application/atom+xml">
+</head><body><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i><div id="sidebar" data-display="true"><div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span><hr></div><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar"></div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80-ip%E5%8D%8F%E8%AE%AE"><span class="toc-number">1.</span> <span class="toc-text"> 一、IP协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#ip%E5%9C%B0%E5%9D%80%E7%9A%84%E4%B8%89%E7%A7%8D%E7%BC%96%E5%9D%80%E6%96%B9%E6%B3%95%E5%8E%86%E5%8F%B2%E9%98%B6%E6%AE%B5"><span class="toc-number">1.1.</span> <span class="toc-text"> IP地址的三种编址方法（历史阶段）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E7%B1%BB%E5%9C%B0%E5%9D%80"><span class="toc-number">1.2.</span> <span class="toc-text"> 分类地址</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%90%E7%BD%91"><span class="toc-number">1.3.</span> <span class="toc-text"> 子网</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%97%A0%E5%88%86%E7%B1%BB%E7%BC%96%E5%9D%80%E8%B6%85%E7%BD%91cidr"><span class="toc-number">1.4.</span> <span class="toc-text"> 无分类编址（超网，CIDR）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#ip%E6%95%B0%E6%8D%AE%E5%8C%85%E6%A0%BC%E5%BC%8F"><span class="toc-number">1.5.</span> <span class="toc-text"> IP数据包格式</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%B7%AF%E7%94%B1%E5%99%A8%E5%88%86%E7%BB%84%E8%BD%AC%E5%8F%91%E7%AE%97%E6%B3%95"><span class="toc-number">1.6.</span> <span class="toc-text"> 路由器分组转发算法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C-%E5%9C%B0%E5%9D%80%E8%A7%A3%E6%9E%90%E5%8D%8F%E8%AE%AEarp"><span class="toc-number">2.</span> <span class="toc-text"> 二、地址解析协议ARP</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89-icmp%E7%BD%91%E9%99%85%E6%8E%A7%E5%88%B6%E6%8A%A5%E6%96%87%E5%8D%8F%E8%AE%AE"><span class="toc-number">3.</span> <span class="toc-text"> 三、ICMP网际控制报文协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%AE%E9%94%99%E6%8A%A5%E5%91%8A%E6%8A%A5%E6%96%87"><span class="toc-number">3.1.</span> <span class="toc-text"> 差错报告报文</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%A2%E9%97%AE%E6%8A%A5%E6%96%87"><span class="toc-number">3.2.</span> <span class="toc-text"> 询问报文</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B-%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE"><span class="toc-number">4.</span> <span class="toc-text"> 四、路由选择协议</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%86%E5%B1%82%E6%AC%A1%E7%9A%84%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE"><span class="toc-number">4.1.</span> <span class="toc-text"> 分层次的路由选择协议</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E9%83%A8%E7%BD%91%E5%85%B3%E5%8D%8F%E8%AE%AErip"><span class="toc-number">4.2.</span> <span class="toc-text"> 内部网关协议RIP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%86%85%E9%83%A8%E7%BD%91%E5%85%B3%E5%8D%8F%E8%AE%AEospf"><span class="toc-number">4.3.</span> <span class="toc-text"> 内部网关协议OSPF</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%96%E9%83%A8%E7%BD%91%E5%85%B3%E5%8D%8F%E8%AE%AEbgp"><span class="toc-number">4.4.</span> <span class="toc-text"> 外部网关协议BGP</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%94-ip%E5%A4%9A%E6%92%AD"><span class="toc-number">5.</span> <span class="toc-text"> 五、IP多播</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BD%91%E9%99%85%E7%BB%84%E7%AE%A1%E7%90%86%E5%8D%8F%E8%AE%AEigmp"><span class="toc-number">5.1.</span> <span class="toc-text"> 网际组管理协议IGMP</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A4%9A%E6%92%AD%E8%B7%AF%E7%94%B1%E9%80%89%E6%8B%A9%E5%8D%8F%E8%AE%AE"><span class="toc-number">5.2.</span> <span class="toc-text"> 多播路由选择协议</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%85%AD-%E5%A4%9A%E5%8D%8F%E8%AE%AE%E6%A0%87%E8%AE%B0%E4%BA%A4%E4%BA%92mpls"><span class="toc-number">6.</span> <span class="toc-text"> 六、多协议标记交互MPLS</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B7%A5%E4%BD%9C%E8%BF%87%E7%A8%8B"><span class="toc-number">6.1.</span> <span class="toc-text"> 工作过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#mpls%E4%BD%8D%E7%BD%AE%E4%B8%8E%E9%A6%96%E9%83%A8%E6%A0%BC%E5%BC%8F"><span class="toc-number">6.2.</span> <span class="toc-text"> MPLS位置与首部格式</span></a></li></ol></li></ol></div></div><div class="author-info hide"><div class="author-info__avatar text-center"><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210205152041.png"></div><div class="author-info__name text-center">zhangws</div><div class="author-info__description text-center"></div><div class="follow-button"><a target="_blank" rel="noopener" href="https://juejin.cn/user/888061125471917">关注我</a></div><hr><div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span class="pull-left">文章</span><span class="pull-right">4</span></a><a class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span class="pull-right">3</span></a><a class="author-info-articles__categories article-meta" href="/categories"><span class="pull-left">分类</span><span class="pull-right">3</span></a></div><hr><div class="author-info-links"><div class="author-info-links__title text-center">友情链接</div><a class="author-info-links__name text-center" target="_blank" rel="noopener" href="https://github.com/xxm-sz">Github</a><a class="author-info-links__name text-center" target="_blank" rel="noopener" href="https://juejin.cn/user/888061125471917/posts">掘金</a><a class="author-info-links__name text-center" target="_blank" rel="noopener" href="https://xxm-sz.github.io/">博客</a></div></div></div><div id="content-outer"><div class="no-bg" id="top-container"><div id="page-header"><span class="pull-left"> <a id="site-name" href="/">新小梦</a></span><i class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus">   <a class="site-page" href="/">首页</a><a class="site-page" href="/archives">文章</a><a class="site-page" href="/tags">标签</a><a class="site-page" href="/categories">目录</a></span><span class="pull-right"></span></div><div id="post-info"><div id="post-title">网络层IP、ARP,RIP,OSPF</div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2021-03-01</time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C/">计算机网络</a><div class="post-meta-wordcount"><span>字数总计: </span><span class="word-count">5k</span><span class="post-meta__separator">|</span><span>阅读时长: 14 分钟</span></div></div></div></div><div class="layout" id="content-inner"><article id="post"><div class="article-container" id="post-content"><p>网络层负责主机到主机的逻辑通信，而端到端系统的逻辑通信交给了运输层。网络层对运输层只提供简单灵活的，无连接的，尽最大努力交付的数据报服务。也就是说网络层不提供可靠的数据交付服务保证。</p>
+<p>网络层主要存在四个协议：IP,ARP,ICMP,IGMP</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210223124010.png" alt="image-20210223124010575"></p>
+<p><strong>网际协议IP</strong>: 是TCP/IP体系中两个最主要的协议之一。是网络层为运输层提供的数据运输的基础。</p>
+<p><strong>地址解析协议ARP</strong>：将网络的层的IP地址转化为链路层的硬件地址。</p>
+<p><strong>网际控制报文协议ICMP</strong>：允许主机或路由器报告网络的状态，有效提高分组的到达率。</p>
+<p><strong>路由选择协议</strong>：解决分组如何从一台主机到另外一台主机的过程。<strong>RIP</strong>基于距离选择的AS内部路由选择协议，根据距离来选择分组下一跳路由器；<strong>OSPF</strong>基于链路状态选择的AS内部路由选择协议，基于链路的代价（距离，费用，耗时等等）来选择路由；<strong>BGP</strong>基于向量距离选择的AS之间的路由选择协议。</p>
+<h2 id="一-ip协议"><a class="markdownIt-Anchor" href="#一-ip协议"></a> 一、IP协议</h2>
+<h3 id="ip地址的三种编址方法历史阶段"><a class="markdownIt-Anchor" href="#ip地址的三种编址方法历史阶段"></a> IP地址的三种编址方法（历史阶段）</h3>
+<ul>
+<li>分类IP地址</li>
+<li>子网划分</li>
+<li>构成超网</li>
+</ul>
+<h3 id="分类地址"><a class="markdownIt-Anchor" href="#分类地址"></a> 分类地址</h3>
+<p>网络号标识当前主机（或路由器）所连接到的网络，一个网络号在整个互联网是唯一。主机号则代表当前主机在所连接的网络是是唯一的。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210224101705.png" alt="image-20210224101658424"></p>
+<p>其中ABC类地址是最常用的单播地址。（其实目前大多数使用无分类IP地址进行路由选择）</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210224101910.png" alt="image-20210224101910179"></p>
+<p>从IP地址的前四位默认分配可以快速定位该IP地址的类别，例如128开头的B类地址，192开始C类地址</p>
+<p>判断多台主机是否在同个网络的依据网络号相同，通过桥接，转发器连接的网络还是在同个网络中。</p>
+<h3 id="子网"><a class="markdownIt-Anchor" href="#子网"></a> 子网</h3>
+<p>说到底，就是分类地址的基础上，借用主机号的若干位数来划分网络，形成内部的网络。对外来说，分组还是到达网络号还在网络，再到子网，最后到主机。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210225103005.png" alt="image-20210225103005869"></p>
+<p>从分组的目的地址和源地址是无法区分是否划分子网。需要借助子网掩码。</p>
+<h3 id="无分类编址超网cidr"><a class="markdownIt-Anchor" href="#无分类编址超网cidr"></a> 无分类编址（超网，CIDR）</h3>
+<p>从子网的三级编址又回到二级编制，只是不再分类罢了。</p>
+<ul>
+<li>消除分类地址和子网划分；</li>
+<li>网络前缀相同的连续IP地址组成“CIDR地址块”，可以计算出最大、最小IP地址；</li>
+<li>同样存在掩码，但不存在子网。但分配到CIDR地址的单位可以自己划分子网，也就是单位内部的网络前缀大于分配到的CIDR地址前缀；</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210225113153.png" alt="image-20210225113153793"></p>
+<p>路由表中利用CIDR地址块来查找目的网络，即<strong>路由聚合</strong>（构成超网）。意味着路由表的记录条目变小，因为一个记录相比原有代替了一整块IP地址。</p>
+<p>路由表每个项目由网络前缀和下一跳地址组成，匹配结果应该选择最长的网络前缀路由，即<strong>最长前缀网络匹配</strong>，即前缀越长，地址越少，目的地址越具体。二叉线索查找路由表，将IP地址32位从左到右，按位与树的度进行查找，左0右1，如果有匹配的路径，所以存在该前缀，再与对应的掩码按位与得出网络前缀N，如果N与目的地址网络前缀一致，说明找到下一跳地址。</p>
+<h3 id="ip数据包格式"><a class="markdownIt-Anchor" href="#ip数据包格式"></a> IP数据包格式</h3>
+<p><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210224112437.png" alt="image-20210224112437735"></p>
+<ul>
+<li>
+<p><strong>版本</strong>：IP协议版本，通信双方IP协议版本必须一致，例如IPv4,IPv6</p>
+</li>
+<li>
+<p><strong>首部长度</strong>：占4位，最大代表十进制15，单位为32位字长，即4个字节，所有首部最长60个字节。首部固定部分20个字节，所以该字段最小值5。首部长度不是4字节整数倍，需要通过填充字段加入填充。</p>
+</li>
+<li>
+<p><strong>总长度</strong>：包括首部和数据部分， 16位，单位为字节，2^16-1字节。但不能超过链路层的MTU值，例如互联网MTU=1500字节，否则需要进行分片处理。分片后的总长度指的新的分组总长度。</p>
+</li>
+<li>
+<p><strong>标识</strong>：数据包分片后，具有相同的标识，用于重装会数据报。</p>
+</li>
+<li>
+<p><strong>标志</strong>： 3位，最低位标识MF=1表示还有分片；中间位DF=0表示允许分片。</p>
+</li>
+<li>
+<p><strong>片偏移</strong>：数据报在分片后，在原数据报的的偏移，片偏移以8个字节为单位，即每个分片分组是8字节数的整数倍。</p>
+</li>
+<li>
+<p><strong>生存时间</strong>：或跳数限制，在发送方设置，每经过路由器，则减1，小于零则丢弃该分组。</p>
+</li>
+<li>
+<p><strong>协议</strong>：协议字段支出该分组携带的数据属于何种协议，让网络层知道如何上交给运输层的何种协议。</p>
+</li>
+<li>
+<p><strong>首部检验和</strong>：只检验首部，不检验数据部分。每经过路由器，都需重新计算检验和。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210225094743.png" alt="image-20210225094736211"></p>
+</li>
+</ul>
+<h3 id="路由器分组转发算法"><a class="markdownIt-Anchor" href="#路由器分组转发算法"></a> 路由器分组转发算法</h3>
+<ol>
+<li>从分组提取目的IP地址D，得出目的网络地址N;</li>
+<li>若N是与路由器直接相连的网络地址，则直接交付目的主机，否则间接交付，下一步；</li>
+<li>若路由表有的目的地址D,则将分组交给路由器所指明的下一跳路由器，否则下一步；</li>
+<li>若路由表有到达网络N的路由，则将分组交给路由器所指明的下一跳路由器，否则下一步；</li>
+<li>若路由表有默认路由，则将分组交给路由器所指明的默认路由，否则下一步；</li>
+<li>报告分组出错。</li>
+</ol>
+<h2 id="二-地址解析协议arp"><a class="markdownIt-Anchor" href="#二-地址解析协议arp"></a> 二、地址解析协议ARP</h2>
+<p>从网络层使用的IP地址，解析出数据链路层的使用的硬件地址。在主机的ARP高速缓存总存放着一个从IP地址到硬件地址的映射表。</p>
+<p>映射表数据填充：</p>
+<p>1、查询主机的ARP进程在局域网广播ARP请求分组</p>
+<p>2、其他主机的ARP进程收到该请求分组，如果收到的请求分组携带的查询IP地址一致，则将自身的硬件地址写入到ARP响应分组中，并发送给查询主机；同时会将查询主机的硬件地址插入到自己的映射表中。否则忽略该分组</p>
+<p>3、查询主机收到响应分组，则将硬件地址插入到映射表中。</p>
+<p>每个映射表每条记录都有一个生存时间，超过该时间未使用，则会被删除。</p>
+<p>其实所有的分组都需要经过路由器进行转发的，不在同个局域网的寻址就交个路由器进行寻址。</p>
+<h2 id="三-icmp网际控制报文协议"><a class="markdownIt-Anchor" href="#三-icmp网际控制报文协议"></a> 三、ICMP网际控制报文协议</h2>
+<p>允许主机或路由器报告差错情况和提供有关异常情况的报告，更有效转发IP分组和提高交付成功机会。ICMP作为分组数据部分被传递。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210225165549.png" alt="image-20210225165549591"></p>
+<p><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210225165701.png" alt="image-20210225165701465"></p>
+<h3 id="差错报告报文"><a class="markdownIt-Anchor" href="#差错报告报文"></a> 差错报告报文</h3>
+<ul>
+<li><strong>终点不可达</strong>：当路由器或主机不能交付分组时则向源点发送终点不可达报文。</li>
+<li><strong>时间超过</strong>：当路由器收到生存时间为零的分组需要向源点发送时间超过报文，并丢弃该分组。</li>
+<li><strong>参数问题</strong>：当路由器或者目的主机收到分组首部有字段值不正确，需要向源点发送参数问题报文，并丢弃该分组。</li>
+<li><strong>改变路由（重定向）</strong>：路由器吧改变路由报文发送给主机，让主机知道下次应将数据报发送给另外的路由器。</li>
+</ul>
+<p>差错报告报文的数据部分：分组的首部+分组数据部分前8个字节（运输层的目的端口和源端口，序号）</p>
+<h3 id="询问报文"><a class="markdownIt-Anchor" href="#询问报文"></a> 询问报文</h3>
+<ul>
+<li>
+<p><strong>回送请求和回答</strong>： 回送请求报文是主机或路由器向特定的目的主机发出的询问报文，收到报文的主机需要回送回答报文。用来测试目的站是否可达以及相关状态。</p>
+</li>
+<li>
+<p><strong>时间戳请求和回答报文</strong>： 请某台主机或路由器回答当前日期和时间。用于时钟同步和时间测量。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210225173124.png" alt="image-20210225173124635"></p>
+</li>
+</ul>
+<h2 id="四-路由选择协议"><a class="markdownIt-Anchor" href="#四-路由选择协议"></a> 四、路由选择协议</h2>
+<p>计算路由器中路由表的各项目。</p>
+<h3 id="分层次的路由选择协议"><a class="markdownIt-Anchor" href="#分层次的路由选择协议"></a> 分层次的路由选择协议</h3>
+<p>互联网把路由选择协议划分两大类：</p>
+<ul>
+<li>
+<p><strong>内部网关协议IGP</strong>：自治系统内部使用的路由选择协议，与其它自治系统无关，例如RIP，OSPF协议</p>
+</li>
+<li>
+<p><strong>外部网关协议EGP</strong>：若源主机和目的主机在不同的自治系统中，不同自治系统的边界就需要使用该协议将路由选择信息传递给对方。例如BGP-4协议。</p>
+</li>
+</ul>
+<h3 id="内部网关协议rip"><a class="markdownIt-Anchor" href="#内部网关协议rip"></a> 内部网关协议RIP</h3>
+<p>RIP是一种分布式的基于距离向量的路由选择协议。RIP协议维护从自己到其他目的网络的距离记录，也称为跳数，每经过一个路由器距离加1，RIP允许一条路径最长15，超过即不可达，因此只适合在小型网络。那么RIP协议就是在记录中找到最短距离的路径。RIP协议和下文的OSPF协议都需要和其他路由器交互路由信息。</p>
+<p>RIP协议特点：</p>
+<ul>
+<li>仅和相邻路由器交换信息。</li>
+<li>交换信息为当前路由器所知道的全部信息，即自己现在的路由表。</li>
+<li>按固定的时间间隔交换路由器信息。</li>
+</ul>
+<p>通过路由信息的交换，可以得出到达本自治系统中任何一个网络的最短距离和下一跳路由地址。这种路由交换信息页称为<strong>距离向量算法</strong>。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210225182347.png" alt="image-20210225182347527"></p>
+<h3 id="内部网关协议ospf"><a class="markdownIt-Anchor" href="#内部网关协议ospf"></a> 内部网关协议OSPF</h3>
+<p><strong>开发最短路径优先OSPF</strong>是基于Dijkstra提出的<strong>最短路径算法PSF</strong>，使用分布式的<strong>链路状态协议</strong>。</p>
+<ul>
+<li>使用洪泛法向本自治系统中所有路由器发送信息。</li>
+<li>发送的信息就是与本路由器相邻的所有路由器的链路状态，链路状态指出相邻的路由器和该链路的度量，例如费用、距离、时延、带宽等等。</li>
+<li>只有链路状态发生变化，路由器才使用洪泛法向所有路由器发送此信息。</li>
+</ul>
+<p>通过频繁的交换链路状态信息，每个路由器都能建立起链路状态数据库，也是全网的拓扑图。相比RIP,器链路状态能更快的更新，以及知道自治系统的主机数，之间链路的代价。</p>
+<p>采用层次结构的区域划分来限制一个较小范围的链路状态信息库，避免每次广播整个自治系统。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210226163148.png" alt="image-20210226163148632"></p>
+<p>OSPF直接使用IP数据报传送，作为IP数据报的数据部分，此时IP数据报协议字段为89。分组使用24字节的固定长度。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210301102527.png" alt="image-20210301102520551"></p>
+<ul>
+<li>
+<p><strong>版本</strong>：当前版本号2；</p>
+</li>
+<li>
+<p><strong>类型</strong>：五种类型分组的一种。</p>
+<ul>
+<li><strong>类型1</strong>：问候分组，用来发现和维持领站的可达性。每10秒就要交换1次，确认链路可达，若40秒未收到问候分组，则认为不可达。</li>
+<li><strong>类型2</strong>：数据库描述分组，向领站给出自己的链路状态数据库的全部链路状态项目的摘要信息。</li>
+<li><strong>类型3</strong>：链路状态请求分组，向对方请求发送某些链路状态项目的详细信息。</li>
+<li><strong>类型4</strong>：链路状态更新分组，用洪泛方对全网更新链路状态。OSPF协议的核心部分，也是最浮渣的。</li>
+<li><strong>类型5</strong>：链路状态确认分组，对链路更新分组的确认。</li>
+</ul>
+</li>
+<li>
+<p><strong>分组长度</strong>：包括首部在内的分组长度，字节为单位。</p>
+</li>
+<li>
+<p><strong>路由器标识符</strong>: 标志发送该分组的路由器的接口的IP地址。即源地址的IP地址了。</p>
+</li>
+<li>
+<p><strong>区域标识符</strong>：分组所属区域的标识符。</p>
+</li>
+<li>
+<p><strong>校验和</strong>：用来检测分组的差错。</p>
+</li>
+<li>
+<p><strong>鉴别类型</strong>： 只有两只0（不用）或1（口令）。</p>
+</li>
+<li>
+<p><strong>鉴别</strong>：鉴别类型0就填0,1则填8个字符的口令。</p>
+</li>
+</ul>
+<h3 id="外部网关协议bgp"><a class="markdownIt-Anchor" href="#外部网关协议bgp"></a> 外部网关协议BGP</h3>
+<p><strong>边界网关协议BGP</strong>主要应用在不同自治系统之间的中间路由选择协议，而RIP和OSPF则是应用在自治系统内部的。</p>
+<p>BGP力求寻找一条能够到达目的网络的且比较好的路由，而并非要找一条最佳路由。采用了路径<strong>向量路由器选择协议</strong>。</p>
+<p>自治系统的管理人员需要配置至少一个路由器作为该系统的”BGP发言人“。通过发言人与其它AS的发言人通过TCP连接交互BGP报文，建立起BGP会话后交换路由信息。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210301112132.png" alt="image-20210301112132805"></p>
+<p>BGP分组有19个字节的首部，基于TCP数据报传输，作为TCP数据报的数据部分。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210301112659.png" alt="image-20210301112659615"></p>
+<h2 id="五-ip多播"><a class="markdownIt-Anchor" href="#五-ip多播"></a> 五、IP多播</h2>
+<p>采用IP多播，即一对多广播，可显著减轻网络中各种资源的消耗。D类IP一个地址代表一个多播组，且多播地址作用于目的地址，不能是源地址。多播路由器指的是支持转发和复制多播分组的路由器。</p>
+<h3 id="网际组管理协议igmp"><a class="markdownIt-Anchor" href="#网际组管理协议igmp"></a> 网际组管理协议IGMP</h3>
+<p>IGMP协议让连接在本地局域网上的多播路由器知道本局域网上是否有主机参加或退出某个多播组。</p>
+<p>工作阶段：</p>
+<ul>
+<li>当某台主机加入新的多播组时，向该多播组的多播地址发送广播，声明加入该广播组。本地多播路由器接收到ICMP报文后，还需要通过多播路由选择协议转发到其他网络上的多播路由器。</li>
+<li>组成员关系是动态的。本地多播路由器要周期探寻本地局域网上的主机，确定是否还有成员参加多播。只要接收一个相应，认为该多播组是活跃的。</li>
+</ul>
+<p>具体措施：</p>
+<ol>
+<li>主机和多播路由器之间所有通信都是IP多播；尽力采用硬件多播，这样没有参加多播的主机就接收不到IGMP报文。</li>
+<li>多播路由器在探询成员关系，只需要对所有的组发送一个请求信息的询问报文。而不需要对每一个组发送一个询问报文。且间隔125秒一次。</li>
+<li>若一个网络多个多播路由器时，选择一个探询主机的成员关系。</li>
+<li>询问报文中有一个数值N,指明最长响应时间。收到询问报文的主机，应该在0和N之间随机选择发送响应所需经过的时延，对最小时延的响应应该最先发送。</li>
+<li>同个组内的每一台主机都要监听响应，只要本组其他主机先发送了响应，就不再发响应。</li>
+</ol>
+<h3 id="多播路由选择协议"><a class="markdownIt-Anchor" href="#多播路由选择协议"></a> 多播路由选择协议</h3>
+<p>在多播过程一个多播组中的成员是动态变化的。多播路由选择就是要找出以源主机为根节点的多播转发树。在多播转发树是哪个，每一个多播路由器向树的叶节点向方向转发收到的多播分组，但转发树上的路由器不会收到重复的多播分组。</p>
+<p>常见的多播路由选择协议常用一下三种方法来转发多播数据报：</p>
+<ul>
+<li><strong>洪泛与剪除</strong>：使用较小多播组，所以成员接入的局域网也是相邻的。路由器转发分组采用洪泛的方法，采用<strong>反向路径广播RPB</strong>来判断该多播分组是否从原点径最短路径转发而来，如果是在，则转发给其他路由器，不是则丢弃。从而得出多播组的多播转发树。最后如果某个路由器发现下游树枝已经没有该多播组的成员，则把自身和下游的树枝剪除。</li>
+<li><strong>隧道技术</strong>：使用与多播组的位置比较分散的情况。即两个支持多播组的网络之间隔着不支持多播组的网络，将多播分组封装成普通的单播数据报，发送到目的网络。</li>
+<li><strong>基于核心的发现技术</strong>：适合多播组大小在较大范围内发送变化的情况。为多播组指定核心路由器，给出它IP单播地址。核心路由器通过<strong>洪泛</strong>得出多播转发树。其他路由器发往核心路由器的数据报都要被经过的路由器检查。在这个过程中，如果经过是参加了多播组的路由器接收到，路由器就会处理该数据报。如果是该数据报是该多播组的多播数据报，则会进行转发；如果是加入该多播组的请求数据报，则加入到自己的路由中，后续通过<strong>隧道技术</strong>向该数据报的源路由转发该多播组的数据报。</li>
+</ul>
+<h2 id="六-多协议标记交互mpls"><a class="markdownIt-Anchor" href="#六-多协议标记交互mpls"></a> 六、多协议标记交互MPLS</h2>
+<p>多协议意味着上层可以采用多种协议。利用面向连接技术，使每个分组携带一个叫做标记的小整数。当分组到达交换机时，交换机读取分组标记，并用标记值来检索分组转发表。比查找路由转发表快得多。</p>
+<p>在MPLS域入口给分组打上固定长度的标记，在链路层通过硬件转发，在域出口去除标记。</p>
+<h3 id="工作过程"><a class="markdownIt-Anchor" href="#工作过程"></a> 工作过程</h3>
+<p>MPLS域中所有路由器都支持MPLS技术，故称为标记交换路由器LSR,同时具有标记转换和路由选择功能。</p>
+<ul>
+<li>LSR使用标记分配协议LDP交换报文，并找出和特定路径相对应的路径：标记交换路径LSP。根据这些标记和路径构造出转发表。</li>
+<li>域入口结点给外部到来的IP数据报打上标记，并按照转发表转发给下个LSR。</li>
+<li>一个标记仅在两台LSR之间才有意义，LSR对分组所做的就是：转发和更换新的标记。</li>
+<li>域出口结点把数据报的标记去除，交付给其他主机或路由器。</li>
+</ul>
+<p><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210226144941.png" alt="image-20210226144940982"></p>
+<p><strong>转发等价类FEC</strong></p>
+<p>路由器按照同样方式对待的IP数据报的集合。即从同样的接口转发到同样的下一跳地址，并且具有同样服务类型和同样丢弃优先级等。</p>
+<p>FEC例子：</p>
+<ul>
+<li>目的IP地址与某一特定IP地址的前缀匹配的IP数据报</li>
+<li>所有源地址与目的地址都相同的数据报</li>
+<li>具有某种服务质量的IP数据报</li>
+</ul>
+<p>在MPLS情况下，将属于同样的FEC的IP数据报都指定同样的标记，从而走其他路径到达目的网络，而不止是最短路径，可以使网络负载较为均衡，更好管理网络资源，这种做法也称为<strong>流量工程TE</strong>或<strong>通信量工程</strong>。</p>
+<h3 id="mpls位置与首部格式"><a class="markdownIt-Anchor" href="#mpls位置与首部格式"></a> MPLS位置与首部格式</h3>
+<p>MPLS首部位于数据链路层和网络层之间，在IP数据报首部前，MAC帧首部之后插入4个字节的MPLS首部。</p>
+<p><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210226143206.png" alt="image-20210226143206895"></p>
+<ul>
+<li><strong>标记值</strong>：通常需要管理员人工管理和设置每条交换路径</li>
+<li><strong>试验</strong>： 保留用于试验</li>
+<li><strong>栈S</strong>: 有标记栈的时候使用</li>
+<li><strong>生存时间TTL</strong>: 防止分组兜圈子。</li>
+</ul>
+</div></article><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%BD%91%E7%BB%9C%E5%B1%82/">网络层</a></div><nav id="pagination"><div class="next-post pull-right"><a href="/2021/02/28/ConstraintLayout/"><span>Compose ConstraintLayout 详讲</span><i class="fa fa-chevron-right"></i></a></div></nav></div></div><footer><div class="layout" id="footer"><div class="copyright">&copy;2020 - 2021 By zhangws</div><div class="framework-info"><span>驱动 - </span><a target="_blank" rel="noopener" href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 - </span><a target="_blank" rel="noopener" href="https://github.com/Molunerfinn/hexo-theme-melody"><span>Melody</span></a></div><div class="footer_custom_text">hitokoto</div><div class="busuanzi"><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><span id="busuanzi_container_page_pv"><i class="fa fa-file"></i><span id="busuanzi_value_page_pv"></span><span></span></span></div></div></footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script><script src="/js/utils.js?version=1.9.0"></script><script src="/js/fancybox.js?version=1.9.0"></script><script src="/js/sidebar.js?version=1.9.0"></script><script src="/js/copy.js?version=1.9.0"></script><script src="/js/fireworks.js?version=1.9.0"></script><script src="/js/transition.js?version=1.9.0"></script><script src="/js/scroll.js?version=1.9.0"></script><script src="/js/head.js?version=1.9.0"></script><script>if(/Android|webOS|iPhone|iPod|iPad|BlackBerry/i.test(navigator.userAgent)) {
+  $('#nav').addClass('is-mobile')
+  $('footer').addClass('is-mobile')
+  $('#top-container').addClass('is-mobile')
+}</script></body></html>
