@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2021-03-02T02:18:37.246Z</updated>
+  <updated>2021-03-04T05:18:24.948Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Compose 状态与组合</title>
+    <link href="http://example.com/2021/03/04/Compose%E7%8A%B6%E6%80%81%E4%B8%8E%E7%BB%84%E5%90%88/"/>
+    <id>http://example.com/2021/03/04/Compose%E7%8A%B6%E6%80%81%E4%B8%8E%E7%BB%84%E5%90%88/</id>
+    <published>2021-03-03T16:00:00.000Z</published>
+    <updated>2021-03-04T05:18:24.948Z</updated>
+    
+    <content type="html"><![CDATA[<h2 id="摘要"><a class="markdownIt-Anchor" href="#摘要"></a> 摘要</h2><p>本文主要介绍的是，在Compose实际编程中，当数据发生变更后，怎么去刷新界面。Compose通过可观察的状态，来触发组合的重组。将状态的显示与状态的存储和更改解耦，通过观察者模式来驱动界面变化。</p><p>在<code>Android</code>的视图层次结构中，界面是通过一个个的<code>View</code>,例如<code>LinearLayout</code>、<code>TextView</code>等搭建而成，我们对其的修改，都是通过<code>findViewById</code>找到该<code>View</code>的引用后设置它的内部状态，例如设置<code>TextView</code>的文本。而Jetpack Compose是一个适用于<code>Android</code>的新式声明性工具包，那么组合与状态解耦之后，它们如何协作。或者简单说，在Compose中，我如何去更新<code>Text</code>的文本？</p><h2 id="三个概念"><a class="markdownIt-Anchor" href="#三个概念"></a> 三个概念</h2><p>学习<code>Compose</code>，我想应该要明白三个概念，即<strong>组合</strong>，<strong>状态</strong>，<strong>事件</strong>。组合是用于描述界面，通过可运行组合项生成。组合是描述界面的可组合项的树结构。应用中的状态是指可以随时间变化的任何值。例如动画，网络请求后的数据。事件由用户或程序产生，例如点击事件。在Compose中，状态与事件分开，状态表示可更改的值，而事件则表示有情况发生的通知。而将状态与事件分开，可以将状态的显示与状态的存储和更改方式解耦。</p><figure class="highlight kotlin"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> count= remember{ mutableStateOf(<span class="number">0</span>) }</span><br><span class="line"></span><br><span class="line">Column() {</span><br><span class="line">    Button(onClick = { count.value++ }) {</span><br><span class="line">    }</span><br><span class="line">    Text(text = <span class="string">"<span class="subst">${count.value}</span>"</span>)</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure><p>上述代码中，将点击数状态与点击事件解耦后，点击数就可以单独拎出来，同时Text文本的点击数状态显示与其更改方式也解耦了。</p><p><code>remeber</code>可以用来存储单个对象，系统会在初始期存储由<code>remember</code>计算的值，并在重组时返回所存储的值。存储对象可以是可变对象，也可以是不可变对象。</p><h2 id="状态存储与更改"><a class="markdownIt-Anchor" href="#状态存储与更改"></a> 状态存储与更改</h2><p>通过<code>remember</code>存储可变对象时，会向可组合项添加内部状态。例如上一小节中就给Text设置一个单独的状态。<code>mutableStateOf</code>函数会创建可观察的<code>MutableState&lt;T&gt;</code>对象，是Compose运行时集成的可观察类型，同时还有它的父接口<code>State&lt;T&gt;</code>。Compose建议将状态设置为可观察的，这样当状态发生更改时，Compose可以自动重组界面。</p><p>除了``MutableState<t><code>来存储状态，我们也可以使用我们熟悉的</code>LiveData<code>,</code>Flow<code>,</code>RxJava`。</t></p><figure class="highlight kotlin"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> liveData= MutableLiveData&lt;String&gt;()</span><br><span class="line"><span class="keyword">val</span> text <span class="keyword">by</span> liveData.observeAsState()</span><br></pre></td></tr></tbody></table></figure><p><code>observeAsState</code>函数是<code>LiveData</code>的扩展函数，将<code>LiveData</code>对象转化成<code>State</code>对象。</p><p><strong><code>Flow</code></strong></p><figure class="highlight kotlin"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">val</span> value: String <span class="keyword">by</span> stateFlow.collectAsState()</span><br></pre></td></tr></tbody></table></figure><p><strong><code>RxJava</code></strong></p><figure class="highlight plain"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">val completed by completable.subscribeAsState()</span><br></pre></td></tr></tbody></table></figure><p>Compose通过扩展函数，将已有框架的可观察类转化成<code>State&lt;T&gt;</code>对象，并由可组合函数读取，因此，我们可以通过扩展函数将自己的可观察类转化成<code>State&lt;T&gt;</code>对象。</p><p>如果需要手动触发重组，例如在从服务器获取数据的情况下，通过使用<code>currentRecomposeScope.invalidate()</code>。</p><h3 id="状态的提升"><a class="markdownIt-Anchor" href="#状态的提升"></a> 状态的提升</h3><p>状态的提升指的是一种将状态移至可组合项的调用方以使可组合项无状态的模式。一来调用方可以通过状态修改组合项，而不止是组合项自身调用。二来不同组合项可以复用同个状态。</p><p>状态提升一般是将状态变量替换成两个参数：</p><ul><li><strong><code>value: T</code></strong>：要显示的当前值</li><li><strong><code>onValueChange: (T) -&gt; Unit</code></strong>：请求更改值的事件，其中 <code>T</code> 是建议的新值。</li></ul><h2 id="重组"><a class="markdownIt-Anchor" href="#重组"></a> 重组</h2><blockquote><p>在初始组合期间，Jetpack Compose 将跟踪您为了描述组合中的界面而调用的可组合项。然后，当应用的状态发生变化时，Jetpack Compose 会安排重组。重组过程中会运行可能已更改的可组合项以响应状态变化，Jetpack Compose 会更新组合以反映所有更改。</p></blockquote><p>通过重组来刷新界面树中状态已经发生变化的微件。重组是智能的，系统会根据需要使用新数据重新绘制（组合函数发出的）微件，而不依赖新数据的（组合函数发出的）微件则不会被重绘。</p><p>在Compose编程中，也要注意到以下几点：</p><ul><li><p>可组合函数可以按任何顺序执行。意味着程序顺序一致性在可组合函数中是不存在，所以不能在Compose可组合函数设置某个全局变量，而是在它们调用方。</p><figure class="highlight kotlin"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Column() {</span><br><span class="line">    Text(text = <span class="string">"我是Text1"</span>)</span><br><span class="line">    Text(text = <span class="string">"我是Text2"</span>)</span><br><span class="line">    Text(text = <span class="string">"我是Text3"</span>)</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure><p>例如这里的三个Text，并不是一定先调用了Text1,再调用Text2,再到Text3函数，它们可能是乱序调用。但它们最终的组合顺序还是被<code>Column</code>布局一样，分别从上到下。</p></li><li><p>可组合函数可以并发执行。意味着Compose可以利用CPU多核心功能，通过并行运行可组合函数来优化重组。</p></li><li><p>重组会跳过尽可能多的内容。Compose会尽力只重组需要更新的部分，也就是会跳过尽可能多的可组合项。每个可组合函数和lambda都可以自行重组。</p></li><li><p>可组合函数可能会非常频繁运行</p><p>在某些情况下，可能对针对界面动画的每一帧运行一个可组合函数。如果在改组合函数执行成本高昂的操作（例如网络请求，从文件读取数据），可能会造成界面卡顿。所以应该将成本高昂的操作迁移到其他线程，在通过<code>ViewModel</code>或<code>LiveData</code>将数据传递给可组合函数。</p></li></ul><h2 id="最后"><a class="markdownIt-Anchor" href="#最后"></a> 最后</h2><p>本文来自<a href="https://developer.android.com/jetpack/compose/state?hl=zh-cn#use-other-types-of-state-in-jetpack-compose">官方文档</a>的状态与组合资料的学习，同时由于版本的升级，一些信息已经变更，需要参考<a href="https://developer.android.com/jetpack/androidx/releases/compose-foundation?hl=zh-cn#1.0.0-alpha11">文档更新记录</a></p><p>欢迎<strong>点赞+关注+评论三连击</strong></p><p>【<a href="https://github.com/xxm-sz">Github</a>】【<a href="https://juejin.cn/user/888061125471917/posts">掘金</a>】【<a href="https://xxm-sz.github.io/">博客</a>】</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;h2 id=&quot;摘要&quot;&gt;&lt;a class=&quot;markdownIt-Anchor&quot; href=&quot;#摘要&quot;&gt;&lt;/a&gt; 摘要&lt;/h2&gt;
+&lt;p&gt;本文主要介绍的是，在Compose实际编程中，当数据发生变更后，怎么去刷新界面。Compose通过可观察的状态，来触发组合的重组。将状态的显示与</summary>
+      
+    
+    
+    
+    <category term="Jetpack" scheme="http://example.com/categories/Jetpack/"/>
+    
+    
+    <category term="Jetpack Compose" scheme="http://example.com/tags/Jetpack-Compose/"/>
+    
+  </entry>
   
   <entry>
     <title>OkHttp的使用</title>
