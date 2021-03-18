@@ -72,12 +72,12 @@
 <p><strong>工作简要流程</strong>：</p>
 <ol>
 <li><strong>协商算法</strong>。浏览器A向服务器B发送SSL的版本号和可选的加密算法。服务器B选择自己支持的算法（例如RSA），并告知A。</li>
-<li><strong>服务器鉴别</strong>。服务器B向客户端A发送包含其RSA公钥公钥的数字证书，客户端A使用该证书的认证机构CA公开发布的RSA公钥对B的数字证实进行验证。</li>
+<li><strong>服务器鉴别</strong>。服务器B向客户端A发送包含其RSA公钥的数字证书，客户端A使用发布该证书的认证机构CA公开发布的RSA公钥对B的数字证实进行验证。</li>
 <li><strong>会话密钥计算</strong>。客户端A随机生成一个秘密数，用B的公钥加密后发送给B。双方根据协商的算法产生共享的对称会话密钥（即A和B分别用第一步确定的算法对秘密书进行计算生成会话密钥）。</li>
 <li><strong>安全数据传输</strong>。双方用会话密钥生加密和解密传输数据并验证完整性。</li>
 </ol>
 <h2 id="https"><a class="markdownIt-Anchor" href="#https"></a> HTTPS</h2>
-<p>在HTTP1.1以文本形式，HTTP2以二进制形式传输数据，但两者明文传输数据，HTTP2只需借助特定工具就能翻译能明文。因为传输数据被第三方盗取后，非常容易获取传输内容。因此需要对HTTP所属传输数据进行加密，例如使用DES,RSA等加密算法。</p>
+<p>在HTTP1.1以文本形式，HTTP2以二进制形式传输数据，但两者都是明文传输数据，HTTP2只需借助特定工具就能翻译能明文。因为传输数据被第三方盗取后，非常容易获取传输内容。因此需要对HTTP所传输的数据进行加密，例如采用DES,RSA等加密算法。</p>
 <p>HTTPS是在HTTP的基础上，通过SSL/TLS层与运输层TCP通信。也就是说：HTTPS=HTTP+SSL\TLS。</p>
 <p><img src="https://cdn.jsdelivr.net/gh/xxm-sz/dio@main/img/20210302231129.png" alt="image-20210302231129599"></p>
 <p>HTTP与HTTPS的区别：</p>
@@ -87,14 +87,6 @@
 <p>4、HTTPS协议是由SSL+HTTP协议构建的可进行加密传输、身份认证的网络协议，比HTTP协议安全。</p>
 <h2 id="http缓存原理与机制"><a class="markdownIt-Anchor" href="#http缓存原理与机制"></a> HTTP缓存原理与机制</h2>
 <p>通过本地缓存机制，客户端在请求数据时，不必每次都需要向服务器拉去数据，而是先检查本地缓存是否可用。这样非常有力的提高客户端的响应速度。HTTP的缓存存在两种类型：<strong>强制缓存</strong>和<strong>协商缓存</strong>。</p>
-<p>HTTP缓存主要涉及到请求头和响应头中的<code>Cache-Control</code>，不同的值，有不同的含义。</p>
-<ul>
-<li><code>private</code>: 客户端可以缓存数据</li>
-<li><code>public</code>:客户端和中间代理服务器可以缓存数据</li>
-<li><code>max-age=xxx</code>：内容在xxx秒后失效</li>
-<li><code>no-cache</code>: 采用协商缓存验证缓存数据是否有效</li>
-<li><code>no-store</code>: 所有内容都禁止缓存</li>
-</ul>
 <p>客户端可以在HTTP请求中使用的<code>Cache-Control</code>指令：</p>
 <ul>
 <li>max-age：缓存有效期，超过设置的时间表示该缓存已经过期。</li>
@@ -102,7 +94,7 @@
 <li>min-fresh：客户端希望获取一个能在指定的秒数内保持其最新状态的响应</li>
 <li>no-cache：不缓存任何内容，包括请求报文和响应报文。</li>
 <li>nostore：发送缓存前，需要与服务器协商缓存验证。</li>
-<li>no-transform</li>
+<li>no-transform：不得对资源进行转换或转变。<code>Content-Encoding</code>、<code>Content-Range</code>、<code>Content-Type</code>等HTTP头不能由代理修改</li>
 <li>on-if-cached：表明客户端只接受已缓存的响应，并且不要向原始服务器检查是否有更新的拷贝。</li>
 </ul>
 <p>服务器可以在响应中使用的<code>Cache-Control</code>指令：</p>
@@ -114,11 +106,11 @@
 <li>public 可缓存指令，表示响应报文可以被任何对象缓存。</li>
 <li>private 可缓存指令，表示响应报文只能被单个用户缓存，即客户端，不能作为共享缓存，例如代理服务器。</li>
 <li>proxy-revalidate：与must-revalidate作用相同，但它仅适用于共享缓存（例如代理），并被私有缓存忽略。</li>
-<li>max-age</li>
+<li>max-age：缓存有效期，超过设置的时间表示该缓存已经过期。</li>
 <li>s-maxage：覆盖<code>max-age</code>或者<code>Expires</code>头，但是仅适用于共享缓存(比如各个代理)，私有缓存会忽略它。</li>
 </ul>
 <p>当服务器的响应报文请求头携带<code>max-age=xxx</code>，表示该报文数据在<code>xxx</code>秒服务器不会更改，意味着在这段时间，如果客户端请求了相同的数据，则直接从本地缓存取数据即可，并不需要向服务器拉取数据。这就是<strong>强制缓存</strong>。</p>
-<p><strong>协商缓存</strong>指的是当<code>Cache-Control:no-cache</code>或者本地缓存超过<code>max-age=xxx</code>锁设置的时间，在获取本地缓存时，需要先将个缓存的标识发给服务器，由服务器验证该数据是否过期失效。如果失效，则返回包含数据的且状态码200的响应报文；如果未失效，返回状态码304的响应报文，告诉客户端使用本地缓存。</p>
+<p><strong>协商缓存</strong>指的是当<code>Cache-Control:no-cache</code>或者本地缓存超过<code>max-age=xxx</code>锁设置的时间，在获取本地缓存时，需要先将个缓存的标识<code>Etag</code>发给服务器，由服务器验证该数据是否过期失效。如果失效，则返回新数据的且状态码为200的响应报文；如果未失效，返回状态码304的响应报文，告诉客户端使用本地缓存。</p>
 <p>关于协商缓存流程：</p>
 <ul>
 <li>第一次请求数据，响应报文会携带<code>Last-Modified</code>字段和<code>Etag</code>标识字段，表示该数据在服务器最后修改时间和唯一标识，客户会缓存该数据。</li>
